@@ -1,0 +1,9 @@
+http://www.braveclojure.com/concurrency/
+
+'A reducer is the combination of a reducible collection (a collection that knows how to reduce itself) with a reducing function (the "recipe" for what needs to be done during the reduction).'
+
+- reducers are memory heavy no lazy-seq
+https://www.cs.colorado.edu/~kena/classes/5828/f14/lectures/12-clojureconcurrencyconstr.pdf
+
+https://en.wikipedia.org/wiki/Software_transactional_memory
+"Unlike the locking techniques used in most modern multithreaded applications, STM is often very optimistic: a thread completes modifications to shared memory without regard for what other threads might be doing, recording every read and write that it is performing in a log. Instead of placing the onus on the writer to make sure it does not adversely affect other operations in progress, it is placed on the reader, who after completing an entire transaction verifies that other threads have not concurrently made changes to memory that it accessed in the past. This final operation, in which the changes of a transaction are validated and, if validation is successful, made permanent, is called a commit. A transaction may also abort at any time, causing all of its prior changes to be rolled back or undone. If a transaction cannot be committed due to conflicting changes, it is typically aborted and re-executed from the beginning until it succeeds."
