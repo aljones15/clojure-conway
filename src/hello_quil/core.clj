@@ -6,7 +6,6 @@
             [clojure.core.reducers :as r]))
 
 (def scaler 20.0)
-(defstruct cell :index :alive :x :y)
 (defn scale-w [] (Math/floor (/ (q/screen-width) scaler) ))
 (defn scale-h [] (Math/floor (/ (q/screen-width) scaler) ))
 
@@ -15,7 +14,7 @@
 (defn getX [index] (scaledCoord (mod index (scale-w))))
 (defn getY [index] (scaledCoord (Math/floor (/ index (scale-w)))))
 
-(def initMap
+(def initState
   ; initial state
   (reduce
       (fn [acc num]
@@ -23,14 +22,6 @@
         ) {} (range 0 (* (scale-w) (scale-h))))
  )
 
-(def initState
-  ; the initial state 
-  (map-indexed 
-    (fn [index num]
-      (struct cell index (rand-int 2) (scaledCoord (mod index (scale-w))) 
-        (scaledCoord(Math/floor (/ index (scale-w)))))) 
-    (range 0 (* (scale-w) (scale-h))))
-)
 
 (defn setup []
   ; Set frame rate to 30 frames per second.
@@ -38,24 +29,7 @@
   ; Set color mode to HSB (HSV) instead of default RGB.
   (q/color-mode :hsb)
   ; setup function returns initial state. It contains
-  {:cells (into {} initMap)}
-)
-
-(defn getNeighbor [x y cells]
-  ; gets the neigbor or return a random alive if no neighbor 
-  (let [result (into [] (r/filter (fn [c] (and (= x (:x c)) (= y (:y c)))) cells))] 
-  (if (empty? result) (rand-int 2) (:alive (first result))))
-)
-
-(comment (defn getNeighbors [c cells]
-  ; get neighbors in 8 directions
-  (let [x (:x c) y (:y c) left (- x scaler) 
-       right (+ x scaler) up (+ y scaler) down (- y scaler)]
-    (map 
-      (fn [[newX newY]](getNeighbor newX newY cells)) 
-      [[right y] [left y] [right up] [left up] 
-       [x up] [x down] [right down] [left down]]))
-)
+  {:cells (into {} initState)}
 )
 
 (defn getCell [cells] (fn [key](get cells key (rand-int 2))))
@@ -95,7 +69,7 @@
 
 (defn conway-fold [cells]
   ; update conway's game of life
-  (r/map (update-cell cells) cells)
+  (into {} r/map (update-cell cells) cells)
 )
 
 (defn update-state [state]
