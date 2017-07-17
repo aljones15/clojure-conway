@@ -5,7 +5,7 @@
             [quil.middleware :as m]
             [clojure.core.reducers :as r]))
 
-(def scaler 15.0)
+(def scaler 18.0)
 (defn scale-w [] (Math/floor (/ (q/screen-width) scaler) ))
 (defn scale-h [] (Math/floor (/ (q/screen-width) scaler) ))
 
