@@ -5,7 +5,7 @@
             [quil.middleware :as m]
             [clojure.core.reducers :as r]))
 
-(def scaler 20.0)
+(def scaler 15.0)
 (defn scale-w [] (Math/floor (/ (q/screen-width) scaler) ))
 (defn scale-h [] (Math/floor (/ (q/screen-width) scaler) ))
 
@@ -62,14 +62,19 @@
   {k (cell-state v neighbors)}))
 )
 
-(defn conway-state [cells]
-  ; update conway's game of life
-  (apply merge (map (update-cell cells) cells))
-)
-
 (defn conway-fold [cells]
   ; update conway's game of life
-  (into {} r/map (update-cell cells) cells)
+  ; use partition-all
+  ;(into {} (r/map (update-cell cells) cells))
+  (into {} (pmap (update-cell cells) cells))
+
+)
+
+(defn conway-state [cells]
+  ; update conway's game of life
+  ;(apply merge (map (update-cell cells) cells))
+  ;(apply merge (conway-fold cells))
+  (conway-fold cells)
 )
 
 (defn update-state [state]
